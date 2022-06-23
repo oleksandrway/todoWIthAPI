@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&family=Fascinate&display=swap');
+@import 'bootstrap/dist/css/bootstrap-reboot.css';
+
+@import './variables';
+@import './reuse-parts';
+
+body {
+  font-family: 'Anek Latin', sans-serif;
+  background-color: $dark-main-color;
+  color: #fff;
+}
+
+.container {
+  width: 1330px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+li {
+  list-style-type: none;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+input {
+  background: #17181F;
+  border: 5px solid #20212C;
+  outline: none;
+  color: rgba(255, 255, 255, 0.47);
+}
+
+
+@import './parts/header';
+@import './parts/main-block'

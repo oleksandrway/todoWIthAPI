@@ -1,0 +1,21 @@
+{
+  "name": "todo-app",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@gitart/eslint-config-basic": "^0.2.0",
+    "bootstrap": "^5.1.3",
+    "eslint": "^8.18.0",
+    "js-event-bus": "^1.1.1"
+  },
+  "devDependencies": {
+    "sass": "^1.52.3",
+    "vite": "^2.9.9"
+  }
+}

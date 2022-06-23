@@ -1,0 +1,18 @@
+header {
+  font-family: 'Fascinate', cursive;
+}
+
+.header {
+  padding: 5px 15px;
+  background-color: #20212C;
+
+  &__link {
+    font-size: 2.5rem;
+    color: #fff;
+    text-decoration: none;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
