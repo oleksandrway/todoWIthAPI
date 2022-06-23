@@ -1,5 +1,6 @@
 import EventBus from 'js-event-bus'
 import { getRandomId } from '../helpers/helper'
+import Tasks from './Task'
 
 export const stateBus = new EventBus()
 export const tasksState = {
@@ -33,3 +34,6 @@ export const tasksState = {
     stateBus.emit('task-updated', null, { newValue, id })
   },
 }
+const todoContainer = document.querySelector('#tasks-todo')
+const completedContainer = document.querySelector('#tasks-completed')
+const tasks = new Tasks(tasksState, todoContainer, completedContainer)
