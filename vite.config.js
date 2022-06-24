@@ -4,6 +4,7 @@ import path from 'path'
  */
 const config = {
   // ...import
+  publicDir: 'src/assets',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

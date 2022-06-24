@@ -1,4 +1,4 @@
 import '../styles/main.scss'
-import formInit from './tasks/form-init'
+import tasksInit from '@/js/tasks/index'
 
-formInit('.add-task-form')
+tasksInit()
