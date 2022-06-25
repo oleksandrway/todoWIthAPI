@@ -2,19 +2,12 @@ import EventBus from 'js-event-bus'
 import { createELement, getRandomId } from '@/js/helpers/helper'
 
 export default class Tasks {
-  constructor(form, todoContainer, completedContainer, { onAddClick, onRemoveClick, onCheckboxClick, onEditClick }) {
+  constructor(form, todoContainer, completedContainer) {
     this.todoContainer = todoContainer
     this.completedContainer = completedContainer
-    this.onAddClick = onAddClick
-    this.onRemoveClick = onRemoveClick
-    this.onCheckboxClick = onCheckboxClick
-    this.onEditClick = onEditClick
     this.hooks = new EventBus()
 
-    this.hooks.on('task-added', this.addTask.bind(this))
-    this.hooks.on('task-removed', this.removeTask.bind(this))
     this.hooks.on('task-updated', this.editTask.bind(this))
-    this.hooks.on('task-state-changed', this.handleTaskState.bind(this))
 
     this.formInit(form)
   }
@@ -23,11 +16,10 @@ export default class Tasks {
     form.addEventListener('submit', (e) => {
       e.preventDefault()
       const taskName = form.querySelector('[name="task"]').value
-      this.onAddClick({
+      this.hooks.emit('task-add', null, {
         name: taskName,
         id: getRandomId(),
       })
-
       form.reset()
     })
   }
@@ -48,7 +40,7 @@ export default class Tasks {
       onclick: () => {
         const newTaskName = this.getEditingFieldValue(taskItem)
         this.toggleEditMode(taskItem)
-        this.onEditClick(taskInfo.id, newTaskName)
+        this.hooks.emit('task-update', null, taskInfo.id, newTaskName)
       },
     })
 
@@ -56,7 +48,7 @@ export default class Tasks {
       className: 'btn btn--type-delete',
       innerHTML: '<img src="/icons/icons8-delete.svg" alt="">',
       onclick: () => {
-        this.onRemoveClick(taskInfo.id)
+        this.hooks.emit('task-remove', null, taskInfo.id)
       },
     })
 
@@ -64,7 +56,7 @@ export default class Tasks {
       className: 'task-item__checkbox',
       type: 'checkbox',
       onclick: () => {
-        this.onCheckboxClick(taskInfo.id)
+        this.hooks.emit('task-state-change', null, taskInfo.id)
       },
     })
 
@@ -88,7 +80,7 @@ export default class Tasks {
     return taskItem
   }
 
-  addTask(taskInfo) {
+  renderTask(taskInfo) {
     this.todoContainer.appendChild(this.createTaskItem(taskInfo))
   }
 
@@ -97,7 +89,7 @@ export default class Tasks {
     task.remove()
   }
 
-  handleTaskState({ id, completed }) {
+  changeTaskState({ id, completed }) {
     const taskItem = document.querySelector(`[data-id="${id}"]`)
     const editButton = taskItem.querySelector('.btn--type-edit')
     if (completed) {

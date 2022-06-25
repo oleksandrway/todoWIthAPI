@@ -11,7 +11,8 @@ const tasksState = {
     }
     this.state.push(taskInfo)
   },
-  changeTaskState(task) {
+  changeTaskState(id) {
+    const task = this.getTask(id)
     task.completed = !task.completed
   },
 
@@ -19,7 +20,8 @@ const tasksState = {
     return this.state.find(item => item.id === id)
   },
 
-  updateTask(task, newValue) {
+  updateTask(id, newValue) {
+    const task = this.getTask(id)
     task.name = newValue
   },
 }
