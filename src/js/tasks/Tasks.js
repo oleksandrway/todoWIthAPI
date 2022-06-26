@@ -16,11 +16,13 @@ export default class Tasks {
     form.addEventListener('submit', (e) => {
       e.preventDefault()
       const taskName = form.querySelector('[name="task"]').value
-      this.hooks.emit('task-add', null, {
-        name: taskName,
-        id: getRandomId(),
-      })
-      form.reset()
+      if (taskName) {
+        this.hooks.emit('task-add', null, {
+          name: taskName,
+          id: getRandomId(),
+        })
+        form.reset()
+      }
     })
   }
 
