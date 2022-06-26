@@ -1,28 +1,40 @@
 const tasksState = {
-  state: [],
-  removeTask(id) {
-    this.state.splice(this.getTask(id), 1)
+  store: localStorage,
+  removeTask(key) {
+    this.store.removeItem(key)
   },
   addTask({ name, id }) {
-    const taskInfo = {
+    const taskInfo = JSON.stringify({
       id,
       name,
       completed: false,
-    }
-    this.state.push(taskInfo)
+    })
+    this.store.setItem(id, taskInfo)
   },
-  changeTaskState(id) {
-    const task = this.getTask(id)
+  changeTaskState(key) {
+    const task = this.getTask(key)
     task.completed = !task.completed
+    this.store.setItem(key, JSON.stringify(task))
   },
 
-  getTask(id) {
-    return this.state.find(item => item.id === id)
+  getTask(key) {
+    const task = this.store.getItem(key)
+    return JSON.parse(task)
   },
 
-  updateTask(id, newValue) {
-    const task = this.getTask(id)
+  updateTask(key, newValue) {
+    const task = this.getTask(key)
     task.name = newValue
+    this.store.setItem(key, JSON.stringify(task))
+  },
+
+  getTasks() {
+    const tasks = []
+    for (let i = 0; i < this.store.length; i++) {
+      const task = this.getTask(this.store.key(i))
+      tasks.push(task)
+    }
+    return tasks
   },
 }
 

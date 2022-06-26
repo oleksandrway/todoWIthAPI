@@ -5,8 +5,8 @@ export default function tasksInit() {
   const form = document.querySelector('.add-task-form')
   const todoContainer = document.querySelector('#tasks-todo')
   const completedContainer = document.querySelector('#tasks-completed')
+  const storagedTasks = tasksState.getTasks()
   const tasks = new Tasks(form, todoContainer, completedContainer)
-
   tasks.hooks.on('task-add', ({ name, id }) => {
     tasksState.addTask({ name, id })
     tasks.renderTask(tasksState.getTask(id))
@@ -26,4 +26,5 @@ export default function tasksInit() {
     tasksState.updateTask(id, newValue)
     tasks.editTask(newValue, tasksState.getTask(id))
   })
+  storagedTasks.forEach(task => tasks.renderTask(task))
 }
