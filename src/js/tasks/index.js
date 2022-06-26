@@ -5,7 +5,10 @@ export default function tasksInit() {
   const form = document.querySelector('.add-task-form')
   const todoContainer = document.querySelector('#tasks-todo')
   const completedContainer = document.querySelector('#tasks-completed')
+  const storagedTasks = tasksState.getTasks()
   const tasks = new Tasks(form, todoContainer, completedContainer)
+
+  storagedTasks.forEach(task => tasks.renderTask(task))
 
   tasks.hooks.on('task-add', ({ name, id }) => {
     tasksState.addTask({ name, id })
