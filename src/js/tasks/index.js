@@ -29,5 +29,4 @@ export default function tasksInit() {
     tasksState.updateTask(id, newValue)
     tasks.editTask(newValue, tasksState.getTask(id))
   })
-  storagedTasks.forEach(task => tasks.renderTask(task))
 }
