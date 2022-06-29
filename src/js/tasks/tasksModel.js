@@ -1,4 +1,4 @@
-const tasksState = {
+const tasksModel = {
   store: localStorage,
   removeTask(key) {
     this.store.removeItem(key)
@@ -38,4 +38,4 @@ const tasksState = {
   },
 }
 
-export default tasksState
+export default tasksModel

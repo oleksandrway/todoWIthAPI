@@ -1,4 +1,7 @@
 import '../styles/main.scss'
-import tasksInit from '@/js/tasks/index'
+// import tasksInit from '@/js/tasks/index'
+import { TasksController } from '@/js/tasks/tasksController'
 
-tasksInit()
+// tasksInit()
+
+const tasksController = new TasksController('.add-task-form', '#tasks-todo', '#tasks-completed')

@@ -1,13 +1,11 @@
 import EventBus from 'js-event-bus'
 import { createELement, getRandomId } from '@/js/helpers/helper'
 
-export default class Tasks {
+class TasksView {
   constructor(form, todoContainer, completedContainer) {
     this.todoContainer = todoContainer
     this.completedContainer = completedContainer
     this.hooks = new EventBus()
-
-    this.hooks.on('task-updated', this.editTask.bind(this))
 
     this.formInit(form)
   }
@@ -46,6 +44,9 @@ export default class Tasks {
       },
     })
 
+    if (taskInfo.completed)
+      taskItemEditButton.style.display = 'none'
+
     const taskItemDeleteButton = createELement('button', {
       className: 'btn btn--type-delete',
       innerHTML: '<img src="/icons/icons8-delete.svg" alt="">',
@@ -62,28 +63,47 @@ export default class Tasks {
       },
     })
 
+    if (taskInfo.completed)
+      taskItemCheckbox.checked = true
+
     const taskItemText = createELement('div', {
       className: 'task-item__name',
       textContent: taskInfo.name,
     })
 
+    const editingForm = createELement('form', {
+      className: 'task-item__editing-form',
+      type: 'text',
+      onsubmit: () => {
+        const newTaskName = this.getEditingFieldValue(taskItem)
+        this.toggleEditMode(taskItem)
+        this.hooks.emit('task-update', null, taskInfo.id, newTaskName)
+      },
+    })
     const editingField = createELement('input', {
       className: 'task-item__editing-field',
       type: 'text',
+
     })
+
+    // editingField.onSubmit   toggleEditMode
 
     taskItemControlsWrapper.appendChild(taskItemEditButton)
     taskItemControlsWrapper.appendChild(taskItemDeleteButton)
     taskItem.appendChild(taskItemCheckbox)
     taskItem.appendChild(taskItemText)
-    taskItem.appendChild(editingField)
+    editingForm.appendChild(editingField)
+    taskItem.appendChild(editingForm)
     taskItem.appendChild(taskItemControlsWrapper)
 
     return taskItem
   }
 
   renderTask(taskInfo) {
-    this.todoContainer.appendChild(this.createTaskItem(taskInfo))
+    if (taskInfo.completed)
+      this.completedContainer.appendChild(this.createTaskItem(taskInfo))
+    else
+      this.todoContainer.appendChild(this.createTaskItem(taskInfo))
   }
 
   removeTask(id) {
@@ -113,11 +133,11 @@ export default class Tasks {
     taskItemText.classList.toggle('task-item__name--hidden')
     editingField.classList.toggle('task-item__editing-field--active')
 
-    if (taskEl.classList.contains('task-item--editing'))
+    if (taskEl.classList.contains('task-item--editing')) {
       editingField.value = taskItemText.textContent
-
-    else
-      taskItemText.textContent = newValue
+      editingField.focus()
+    }
+    else { taskItemText.textContent = newValue }
   }
 
   toggleEditMode(taskItem) {
@@ -144,3 +164,5 @@ export default class Tasks {
     return taskName
   }
 }
+
+export default TasksView
