@@ -1,4 +1,4 @@
-export function createELement(tag, props) {
+function createELement(tag, props) {
   const element = document.createElement(tag)
 
   Object.keys(props).forEach((key) => {
@@ -12,6 +12,4 @@ export function createELement(tag, props) {
   return element
 }
 
-export function getRandomId() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-}
+export { createELement }

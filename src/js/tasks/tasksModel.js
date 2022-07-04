@@ -1,41 +1,54 @@
-const tasksModel = {
-  store: localStorage,
-  removeTask(key) {
-    this.store.removeItem(key)
-  },
-  addTask({ name, id }) {
-    const taskInfo = JSON.stringify({
-      id,
-      name,
-      completed: false,
-    })
-    this.store.setItem(id, taskInfo)
-  },
-  changeTaskState(key) {
-    const task = this.getTask(key)
-    task.completed = !task.completed
-    this.store.setItem(key, JSON.stringify(task))
-  },
 
-  getTask(key) {
-    const task = this.store.getItem(key)
-    return JSON.parse(task)
-  },
-
-  updateTask(key, newValue) {
-    const task = this.getTask(key)
-    task.name = newValue
-    this.store.setItem(key, JSON.stringify(task))
-  },
+class TasksModel {
+  constructor(keyInStorage) {
+    this.store = localStorage
+    this.keyInStorage = keyInStorage
+  }
 
   getTasks() {
-    const tasks = []
-    for (let i = 0; i < this.store.length; i++) {
-      const task = this.getTask(this.store.key(i))
-      tasks.push(task)
-    }
-    return tasks
-  },
+    const list = JSON.parse(this.store.getItem(this.keyInStorage))
+    if (list)
+      return list
+    else return []
+  }
+
+  removeTask(id) {
+    const oldList = this.getTasks()
+    const newList = oldList.filter(item => item.id !== id)
+    this.store.setItem(this.keyInStorage, JSON.stringify(newList))
+  }
+
+  addTask({ name, id }) {
+    const oldList = this.getTasks()
+    const newLIst = [...oldList, { id, name, completed: false }]
+    this.store.setItem(this.keyInStorage, JSON.stringify(newLIst))
+  }
+
+  changeTaskState(id) {
+    const oldList = this.getTasks()
+    const newList = oldList.map((item) => {
+      if (item.id === id)
+        item.completed = !item.completed
+      return item
+    })
+    this.store.setItem(this.keyInStorage, JSON.stringify(newList))
+  }
+
+  getTask(id) {
+    const tasksList = this.getTasks()
+    return tasksList.find(item => item.id === id)
+  }
+
+  // to here everything is done
+  updateTask(id, newValue) {
+    const oldList = this.getTasks()
+    const newList = oldList.map((item) => {
+      if (item.id === id)
+        item.name = newValue
+      return item
+    })
+    this.store.setItem(this.keyInStorage, JSON.stringify(newList))
+  }
 }
 
-export default tasksModel
+export { TasksModel }

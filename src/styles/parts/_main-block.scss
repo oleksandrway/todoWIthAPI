@@ -20,7 +20,7 @@
   &__btn {
     position: absolute;
     right: 17%;
-    background-color: #F3BBC5;
+    background-color: #f3bbc5;
 
     &:hover {
       background-color: #f3d1d8;
@@ -56,13 +56,12 @@
   }
 }
 
-
 .task-item {
   display: flex;
   align-items: center;
   padding: 10px 20px;
   border-radius: $border-radius;
-  background-color: #20212C;
+  background-color: #20212c;
 
   &__name {
     font-size: 20px;
@@ -71,14 +70,6 @@
     line-height: 20px;
     &--hidden {
       display: none;
-    }
-  }
-
-  &__editing-field {
-    display: none;
-
-    &--active {
-      display: block;
     }
   }
 
@@ -100,7 +91,7 @@
       border-color: $light-main-color;
 
       &:after {
-        content: '\2714';
+        content: "\2714";
         font-size: 17px;
         position: absolute;
         top: 0px;
@@ -128,7 +119,7 @@
   margin-left: auto;
 }
 
-@media(max-width: 991px) {
+@media (max-width: 991px) {
   .tasks-wrapper {
     grid-template-columns: 1fr;
     column-gap: 0px;
@@ -147,13 +138,13 @@
   }
 }
 
-@media(max-width:768px) {
+@media (max-width: 768px) {
   .tasks {
     max-width: 100%;
   }
 }
 
-@media(max-width: 575px) {
+@media (max-width: 575px) {
   .input-block {
     display: flex;
     flex-direction: column;

@@ -1,21 +1,15 @@
-import TasksView from '@/js/tasks/tasksView'
-// import TasksView from '@/js/tasks/TasksView'
-import tasksModel from '@/js/tasks/tasksModel'
+// import TasksView from '@/js/tasks/tasksView'
 
-export class TasksController {
-  constructor(formSelector, todoContainerSelector, completedContainerSelector) {
+// import { TasksModel } from '@/js/tasks/tasksModel'
+
+class TasksController {
+  constructor({ tasksModel, tasksView }) {
     // sayHI()
 
-    this.formSelector = formSelector
-    this.todoContainerSelector = todoContainerSelector
-    this.completedContainerSelector = completedContainerSelector
-    this.storedTasks = tasksModel.getTasks()
+    this.tasksModel = tasksModel
+    this.tasksView = tasksView
 
-    this.tasksView = new TasksView(
-      document.querySelector(this.formSelector),
-      document.querySelector(this.todoContainerSelector),
-      document.querySelector(this.completedContainerSelector),
-    )
+    this.storedTasks = this.tasksModel.getTasks()
 
     this.storedTasks.forEach(task => this.tasksView.renderTask(task))
 
@@ -29,58 +23,30 @@ export class TasksController {
     this.tasksView.hooks.on('task-state-change', (id) => {
       this.changeTaskState(id)
     })
-    this.tasksView.hooks.on('task-update', (id, newValue) => {
-      this.editTask(id, newValue)
+    this.tasksView.hooks.on('task-update', ({ id, newValue }) => {
+      this.editTask({ id, newValue })
     })
   }
 
   addTask({ name, id }) {
-    tasksModel.addTask({ name, id })
-    this.tasksView.renderTask(tasksModel.getTask(id))
+    this.tasksModel.addTask({ name, id })
+    this.tasksView.renderTask(this.tasksModel.getTask(id))
   }
 
   removeTask(id) {
-    tasksModel.removeTask(id)
+    this.tasksModel.removeTask(id)
     this.tasksView.removeTask(id)
   }
 
   changeTaskState(id) {
-    tasksModel.changeTaskState(id)
-    this.tasksView.changeTaskState(tasksModel.getTask(id))
+    this.tasksModel.changeTaskState(id)
+    this.tasksView.changeTaskState(this.tasksModel.getTask(id))
   }
 
-  editTask(id, newValue) {
-    tasksModel.updateTask(id, newValue)
-    this.tasksView.editTask(newValue, tasksModel.getTask(id))
+  editTask({ id, newValue }) {
+    this.tasksModel.updateTask({ id, newValue })
+    this.tasksView.editTask(newValue, this.tasksModel.getTask(id))
   }
 }
 
-// export default function tasksInit() {
-//   const form = document.querySelector('.add-task-form')
-//   const todoContainer = document.querySelector('#tasks-todo')
-//   const completedContainer = document.querySelector('#tasks-completed')
-//   const storagedTasks = tasksState.getTasks()
-//   const tasks = new Tasks(form, todoContainer, completedContainer)
-
-//   storagedTasks.forEach(task => tasks.renderTask(task))
-
-//   tasks.hooks.on('task-add', ({ name, id }) => {
-//     tasksState.addTask({ name, id })
-//     tasks.renderTask(tasksState.getTask(id))
-//   })
-
-//   tasks.hooks.on('task-remove', (id) => {
-//     tasksState.removeTask(id)
-//     tasks.removeTask(id)
-//   })
-
-//   tasks.hooks.on('task-state-change', (id) => {
-//     tasksState.changeTaskState(id)
-//     tasks.changeTaskState(tasksState.getTask(id))
-//   })
-
-//   tasks.hooks.on('task-update', (id, newValue) => {
-//     tasksState.updateTask(id, newValue)
-//     tasks.editTask(newValue, tasksState.getTask(id))
-//   })
-// }
+export { TasksController }
