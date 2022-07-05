@@ -3,15 +3,16 @@ import { getRandomId } from '@/js/helpers/getRandomId'
 import { createELement } from '@/js/helpers/createELement'
 
 class TasksView {
-  constructor(form, todoContainer, completedContainer) {
-    this.todoContainer = todoContainer
-    this.completedContainer = completedContainer
+  constructor({ mainContainerSelector, formSelector, todoContainerSelector, completedContainerSelector }) {
+    this.mainContainer = document.querySelector(` ${mainContainerSelector}`)
+    this.todoContainer = document.querySelector(` ${mainContainerSelector}  ${todoContainerSelector}`)
+    this.completedContainer = document.querySelector(` ${mainContainerSelector} ${completedContainerSelector}`)
+    this.form = document.querySelector(`${mainContainerSelector} ${formSelector}`)
+
     this.hooks = new EventBus()
+    this.formInit(this.form)
 
-    this.formInit(form)
-
-    todoContainer.addEventListener('click', this.tasksEventsListener.bind(this))
-    completedContainer.addEventListener('click', this.tasksEventsListener.bind(this))
+    this.mainContainer.addEventListener('click', e => this.tasksEventsListener(e))
   }
 
   formInit(form) {
@@ -33,21 +34,8 @@ class TasksView {
       const taskId = e.target.closest('.task-item').dataset.id
       this.hooks.emit('task-state-change', null, taskId)
     }
-    else if (e.target.closest('.btn--type-edit')) {
-      const taskItem = e.target.closest('.task-item')
-      const newTaskName = this.getEditingFieldValue(taskItem)
-
-      const id = taskItem.dataset.id
-      this.toggleEditMode(taskItem)
-      this.hooks.emit('task-update', null, { id, newValue: newTaskName })
-    }
-    else if (e.target.classList.contains('task-item__editing-form')) {
-      const taskItem = e.target.closest('.task-item')
-      const newTaskName = this.getEditingFieldValue(taskItem)
-
-      const id = taskItem.dataset.id
-      this.toggleEditMode(taskItem)
-      this.hooks.emit('task-update', null, { id, newValue: newTaskName })
+    else if (e.target.closest('.btn--type-edit') || e.target.classList.contains('task-item__editing-form')) {
+      this.editListener(e)
     }
     else if (e.target.closest('.btn--type-delete')) {
       const taskItem = e.target.closest('.task-item')
@@ -56,38 +44,49 @@ class TasksView {
     }
   }
 
-  editTask(newValue, taskInfo) {
-    const taskEl = document.querySelector(`[data-id="${taskInfo.id}"]`)
-    const taskItemText = taskEl.querySelector('.task-item__name')
-    const editingField = taskEl.querySelector('.task-item__editing-field')
-
-    taskEl.classList.toggle('task-item--editing')
-    taskItemText.classList.toggle('task-item__name--hidden')
-
-    if (taskEl.classList.contains('task-item--editing')) {
-      editingField.value = taskItemText.textContent
-      editingField.focus()
-    }
-    else { taskItemText.textContent = newValue }
+  editListener(e) {
+    e.preventDefault()
+    const taskItem = e.target.closest('.task-item')
+    const newTaskName = this.getEditingFieldValue(taskItem)
+    const id = taskItem.dataset.id
+    this.toggleEditMode({ id })
+    if (newTaskName)
+      this.hooks.emit('task-update', null, { id, newValue: newTaskName })
   }
 
-  toggleEditMode(taskItem) {
-    const editBtn = taskItem.querySelector('.btn--type-edit')
-    const checkbox = taskItem.querySelector('.task-item__checkbox')
+  editTask({ newValue, id }) {
+    const taskEl = document.querySelector(`[data-id="${id}"]`)
+    const taskItemText = taskEl.querySelector('.task-item__name')
+    taskItemText.textContent = newValue
+  }
+
+  toggleEditMode({ id }) {
+    const taskEl = document.querySelector(`[data-id="${id}"]`)
+
+    const taskItemText = taskEl.querySelector('.task-item__name')
+    const editBtn = taskEl.querySelector('.btn--type-edit')
+    const checkbox = taskEl.querySelector('.task-item__checkbox')
     editBtn.classList.toggle('btn--type-edit-active')
+    taskEl.classList.toggle('task-item--editing')
+
     if (editBtn.classList.contains('btn--type-edit-active')) {
       editBtn.innerHTML = '<img src="/icons/save.svg" alt="">'
       checkbox.setAttribute('disabled', 'disabled')
       const editingForm = this.createEditForm()
       checkbox.insertAdjacentElement('afterEnd', editingForm)
+      const editingField = taskEl.querySelector('.task-item__editing-field')
+      editingField.value = taskItemText.textContent
+      editingField.focus()
     }
 
     else {
       editBtn.innerHTML = '<img src="/icons/options.svg" alt="">'
       checkbox.removeAttribute('disabled')
-      const editingForm = taskItem.querySelector('.task-item__editing-form')
+      const editingForm = taskEl.querySelector('.task-item__editing-form')
       editingForm.remove()
     }
+
+    taskItemText.classList.toggle('task-item__name--hidden')
   }
 
   createTaskItem(taskInfo) {

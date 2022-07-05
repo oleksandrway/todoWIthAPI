@@ -39,8 +39,7 @@ class TasksModel {
     return tasksList.find(item => item.id === id)
   }
 
-  // to here everything is done
-  updateTask(id, newValue) {
+  updateTask({ id, newValue }) {
     const oldList = this.getTasks()
     const newList = oldList.map((item) => {
       if (item.id === id)

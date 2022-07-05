@@ -12,7 +12,7 @@
   <header class="header">
     <a href="#" class="header__link">DoDo</a>
   </header>
-  <section class="container main-block">
+  <section class="container main-block todo-container">
     <form action="#" class="add-task-form">
       <div class="add-task-form__title">Enjoy your day, add something...</div>
       <div class="input-block">
@@ -37,8 +37,11 @@
         </ul>
       </div>
     </div>
+  </section>
 
-    <form action="#" class="add-task-form-copy">
+  <section class="container main-block todo-container-copy">
+
+    <form action="#" class="add-task-form">
       <div class="add-task-form__title">Enjoy your day, add something...</div>
       <div class="input-block">
         <input type="text" name="task" class="input-block__input" placeholder="Task name" />
@@ -50,14 +53,14 @@
     <div class="tasks-wrapper">
       <div class="tasks tasks-wrapper__todo">
         <div id="todo-quantity" class="title">Tasks</div>
-        <ul id="tasks-todo-copy" class="tasks-list">
+        <ul id="tasks-todo" class="tasks-list">
 
         </ul>
       </div>
 
       <div class="tasks tasks-wrapper__completed">
         <div id="completed-quantity" class="title">Сompleted</div>
-        <ul id="tasks-completed-copy" class="tasks-list">
+        <ul id="tasks-completed" class="tasks-list">
 
         </ul>
       </div>
