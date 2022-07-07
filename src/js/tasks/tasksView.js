@@ -1,18 +1,41 @@
 import EventBus from 'js-event-bus'
-import { getRandomId } from '@/js/helpers/getRandomId'
-import { createELement } from '@/js/helpers/createELement'
+import { createELement } from '@/js/helpers/createElement'
 
 class TasksView {
-  constructor({ mainContainerSelector, formSelector, todoContainerSelector, completedContainerSelector }) {
+  constructor({ mainContainerSelector, formSelector, todoContainerSelector, completedContainerSelector, tasksContainerSelector }) {
     this.mainContainer = document.querySelector(` ${mainContainerSelector}`)
     this.todoContainer = document.querySelector(` ${mainContainerSelector}  ${todoContainerSelector}`)
     this.completedContainer = document.querySelector(` ${mainContainerSelector} ${completedContainerSelector}`)
+    this.tasksContainer = document.querySelector(` ${mainContainerSelector} ${tasksContainerSelector}`)
     this.form = document.querySelector(`${mainContainerSelector} ${formSelector}`)
-
     this.hooks = new EventBus()
-    this.formInit(this.form)
 
+    this.formInit(this.form)
     this.mainContainer.addEventListener('click', e => this.tasksEventsListener(e))
+  }
+
+  showTasksLoader() {
+    const loader = createELement('img', {
+      src: '/icons/spinnerWhite.svg',
+      classList: 'tasks-loader',
+    })
+    loader.style.cssText = `
+    width:80px;
+    display:block;
+    margin: 40px auto;
+    `
+    this.tasksContainer.hidden = 'hidden'
+    this.mainContainer.appendChild(loader)
+  }
+
+  hideTasksLoader() {
+    const loader = this.mainContainer.querySelector('.tasks-loader')
+    loader.remove()
+    this.tasksContainer.hidden = ''
+  }
+
+  showErrorMessage(message) {
+    console.error('error')
   }
 
   formInit(form) {
@@ -22,7 +45,7 @@ class TasksView {
       if (taskName) {
         this.hooks.emit('task-add', null, {
           name: taskName,
-          id: getRandomId(),
+
         })
         form.reset()
       }
@@ -31,8 +54,8 @@ class TasksView {
 
   tasksEventsListener(e) {
     if (e.target.closest('.task-item__checkbox')) {
-      const taskId = e.target.closest('.task-item').dataset.id
-      this.hooks.emit('task-state-change', null, taskId)
+      const id = e.target.closest('.task-item').dataset.id
+      this.hooks.emit('task-state-change', null, { id, completed: e.target.checked })
     }
     else if (e.target.closest('.btn--type-edit') || e.target.classList.contains('task-item__editing-form')) {
       this.editListener(e)
@@ -55,13 +78,13 @@ class TasksView {
   }
 
   editTask({ newValue, id }) {
-    const taskEl = document.querySelector(`[data-id="${id}"]`)
+    const taskEl = document.querySelector(`[data-id= "${id}"]`)
     const taskItemText = taskEl.querySelector('.task-item__name')
     taskItemText.textContent = newValue
   }
 
   toggleEditMode({ id }) {
-    const taskEl = document.querySelector(`[data-id="${id}"]`)
+    const taskEl = document.querySelector(`[data-id= "${id}"]`)
 
     const taskItemText = taskEl.querySelector('.task-item__name')
     const editBtn = taskEl.querySelector('.btn--type-edit')
@@ -143,12 +166,13 @@ class TasksView {
   }
 
   removeTask(id) {
-    const task = document.querySelector(`[data-id="${id}"]`)
-    task.remove()
+    const task = document.querySelector(`[data-id= "${id}"]`)
+    if (task)
+      task.remove()
   }
 
   changeTaskState({ id, completed }) {
-    const taskItem = document.querySelector(`[data-id="${id}"]`)
+    const taskItem = document.querySelector(`[data-id= "${id}"]`)
     const editButton = taskItem.querySelector('.btn--type-edit')
     if (completed) {
       this.completedContainer.appendChild(taskItem)
