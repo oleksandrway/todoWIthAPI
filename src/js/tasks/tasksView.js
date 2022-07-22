@@ -14,16 +14,48 @@ class TasksView {
     this.mainContainer.addEventListener('click', e => this.tasksEventsListener(e))
   }
 
+  showInnerTaskLoader(id) {
+    const taskEl = document.querySelector(`[data-id= "${id}"]`)
+    const taskItemText = taskEl.querySelector('.task-item__name')
+
+    const loader = createELement('img', {
+      src: '/icons/spinnerWhite.svg',
+      classList: 'task-loader',
+    })
+
+    taskItemText.insertAdjacentElement('afterend', loader)
+    taskItemText.hidden = 'hidden'
+  }
+
+  hideInnerTaskLoader(id) {
+    const taskEl = document.querySelector(`[data-id= "${id}"]`)
+    const loader = taskEl.querySelector('.task-loader')
+    const taskItemText = taskEl.querySelector('.task-item__name')
+
+    loader.remove()
+    taskItemText.hidden = ''
+  }
+
+  showTaskLoader() {
+    const loader = createELement('img', {
+      src: '/icons/spinnerWhite.svg',
+      classList: 'task-loader',
+    })
+
+    this.todoContainer.appendChild(loader)
+  }
+
+  hideTaskLoader() {
+    const loader = this.todoContainer.querySelector('.task-loader')
+    loader.remove()
+  }
+
   showTasksLoader() {
     const loader = createELement('img', {
       src: '/icons/spinnerWhite.svg',
       classList: 'tasks-loader',
     })
-    loader.style.cssText = `
-    width:80px;
-    display:block;
-    margin: 40px auto;
-    `
+
     this.tasksContainer.hidden = 'hidden'
     this.mainContainer.appendChild(loader)
   }

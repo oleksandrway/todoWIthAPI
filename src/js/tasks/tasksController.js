@@ -24,20 +24,19 @@ class TasksController {
   async renderStoredTasks() {
     this.tasksView.showTasksLoader()
     const tasksList = await this.tasksModel.getTasks()
-    // const tasksList = await this.tasksModel.getTasks().then(() => {
-    //   this.tasksView.hideTasksLoader()
-    // })
-
     tasksList.forEach(task => this.tasksView.renderTask(task))
     this.tasksView.hideTasksLoader()
   }
 
   async createTask({ name }) {
+    this.tasksView.showTaskLoader()
     const task = await this.tasksModel.createTask({ name })
     this.tasksView.renderTask(task)
+    this.tasksView.hideTaskLoader()
   }
 
   async removeTask(id) {
+    this.tasksView.showInnerTaskLoader(id)
     await this.tasksModel.removeTask(id)
     this.tasksView.removeTask(id)
   }
@@ -48,8 +47,10 @@ class TasksController {
   }
 
   async editTask({ id, newValue }) {
-    await this.tasksModel.updateTask({ id, newValue })
+    this.tasksView.showInnerTaskLoader(id)
+    await this.tasksModel.editTask({ id, newValue })
     this.tasksView.editTask({ newValue, id })
+    this.tasksView.hideInnerTaskLoader(id)
   }
 }
 

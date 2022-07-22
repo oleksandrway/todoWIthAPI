@@ -50,12 +50,7 @@ class TasksAPIModel {
     })
   }
 
-  async getTask({ id }) {
-    const tasksList = await this.getTasks()
-    return tasksList.find(item => +item.id === +id)
-  }
-
-  async updateTask({ id, newValue }) {
+  async editTask({ id, newValue }) {
     await fetch(`${this.URL}/update`, {
       method: 'POST',
       body: JSON.stringify({

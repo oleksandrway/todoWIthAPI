@@ -1,5 +1,4 @@
 import { getRandomId } from '@/js/helpers/getRandomId'
-// id: getRandomId(),
 class TasksModel {
   constructor(keyInStorage) {
     this.store = localStorage
@@ -42,12 +41,7 @@ class TasksModel {
     this.store.setItem(this.keyInStorage, JSON.stringify(newList))
   }
 
-  getTask({ id }) {
-    const tasksList = this.getTasks()
-    return tasksList.find(item => item.id === id)
-  }
-
-  updateTask({ id, newValue }) {
+  editTask({ id, newValue }) {
     const oldList = this.getTasks()
     const newList = oldList.map((item) => {
       if (item.id === id)
