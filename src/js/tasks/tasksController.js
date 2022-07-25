@@ -21,36 +21,82 @@ class TasksController {
     })
   }
 
+  handleError(error) {
+    console.log(error)
+    alert(error.message)
+  }
+
   async renderStoredTasks() {
     this.tasksView.showTasksLoader()
-    const tasksList = await this.tasksModel.getTasks()
-    tasksList.forEach(task => this.tasksView.renderTask(task))
-    this.tasksView.hideTasksLoader()
+
+    try {
+      const tasksList = await this.tasksModel.getTasks()
+      if (tasksList)
+        tasksList.forEach(task => this.tasksView.renderTask(task))
+    }
+    catch (error) {
+      this.handleError(error)
+    }
+    finally {
+      this.tasksView.hideTasksLoader()
+    }
   }
 
   async createTask({ name }) {
     this.tasksView.showTaskLoader()
-    const task = await this.tasksModel.createTask({ name })
-    this.tasksView.renderTask(task)
-    this.tasksView.hideTaskLoader()
+
+    try {
+      const task = await this.tasksModel.createTask({ name })
+      this.tasksView.renderTask(task)
+    }
+    catch (error) {
+      this.handleError(error)
+    }
+    finally {
+      this.tasksView.hideTaskLoader()
+    }
   }
 
   async removeTask(id) {
     this.tasksView.showInnerTaskLoader(id)
-    await this.tasksModel.removeTask(id)
-    this.tasksView.removeTask(id)
+
+    try {
+      await this.tasksModel.removeTask(id)
+      this.tasksView.removeTask(id)
+    }
+    catch (error) {
+      this.handleError(error)
+      this.tasksView.hideInnerTaskLoader(id)
+    }
   }
 
-  changeTaskState({ id, completed }) {
-    this.tasksModel.changeTaskState({ id, completed })
-    this.tasksView.changeTaskState({ id, completed })
+  async changeTaskState({ id, completed }) {
+    this.tasksView.showInnerTaskLoader(id)
+    try {
+      await this.tasksModel.changeTaskState({ id, completed })
+      this.tasksView.changeTaskState({ id, completed })
+    }
+    catch (error) {
+      this.handleError(error)
+    }
+    finally {
+      this.tasksView.hideInnerTaskLoader(id)
+    }
   }
 
   async editTask({ id, newValue }) {
     this.tasksView.showInnerTaskLoader(id)
-    await this.tasksModel.editTask({ id, newValue })
-    this.tasksView.editTask({ newValue, id })
-    this.tasksView.hideInnerTaskLoader(id)
+
+    try {
+      await this.tasksModel.editTask({ id, newValue })
+      this.tasksView.editTask({ newValue, id })
+    }
+    catch (error) {
+      this.handleError(error)
+    }
+    finally {
+      this.tasksView.hideInnerTaskLoader(id)
+    }
   }
 }
 

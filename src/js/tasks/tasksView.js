@@ -85,9 +85,12 @@ class TasksView {
   }
 
   tasksEventsListener(e) {
-    if (e.target.closest('.task-item__checkbox')) {
-      const id = e.target.closest('.task-item').dataset.id
-      this.hooks.emit('task-state-change', null, { id, completed: e.target.checked })
+    // e.preventDefault()
+    if (e.target.classList.contains('task-item__checkbox')) {
+      const checkbox = e.target
+      const id = checkbox.closest('.task-item').dataset.id
+      this.hooks.emit('task-state-change', null, { id, completed: checkbox.checked })
+      checkbox.checked = !checkbox.checked
     }
     else if (e.target.closest('.btn--type-edit') || e.target.classList.contains('task-item__editing-form')) {
       this.editListener(e)
@@ -206,6 +209,9 @@ class TasksView {
   changeTaskState({ id, completed }) {
     const taskItem = document.querySelector(`[data-id= "${id}"]`)
     const editButton = taskItem.querySelector('.btn--type-edit')
+    const checkbox = taskItem.querySelector('.task-item__checkbox')
+    // checkbox.checked = !checkbox.checked
+    // console.log(checkbox.checked)
     if (completed) {
       this.completedContainer.appendChild(taskItem)
       editButton.style.display = 'none'
@@ -214,6 +220,7 @@ class TasksView {
       this.todoContainer.appendChild(taskItem)
       editButton.style.display = 'block'
     }
+    checkbox.checked = !checkbox.checked
   }
 
   createEditForm() {

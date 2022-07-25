@@ -6,22 +6,23 @@ class TasksAPIModel {
 
   async getTasks() {
     const response = await fetch(`${this.URL}/list`)
-      .then(res => res.json())
-
     if (!response.ok)
-      console.log('status', response.status)
+      throw new Error(response.status)
 
-    return response.data
+    const result = await response.json()
+    return result.data
   }
 
   async removeTask(id) {
-    await fetch(`${this.URL}/delete`, {
+    const response = await fetch(`${this.URL}/delete`, {
       method: 'POST',
       body: JSON.stringify({ id }),
       headers: {
         'Content-type': 'application/json',
       },
     })
+    if (!response.ok)
+      throw new Error(`Error status: ${response.status}`)
   }
 
   async createTask({ name }) {
@@ -32,13 +33,16 @@ class TasksAPIModel {
         'Content-type': 'application/json',
       },
     })
-      .then(res => res.json())
+    if (!response.ok)
+      throw new Error(`Error status: ${response.status}`)
 
-    return response.data
+    const result = await response.json()
+
+    return result.data
   }
 
   async changeTaskState({ id, completed }) {
-    await fetch(`${this.URL}/update`, {
+    const response = await fetch(`${this.URL}/update`, {
       method: 'POST',
       body: JSON.stringify({
         id,
@@ -48,10 +52,12 @@ class TasksAPIModel {
         'Content-type': 'application/json',
       },
     })
+    if (!response.ok)
+      throw new Error(`Error status: ${response.status}`)
   }
 
   async editTask({ id, newValue }) {
-    await fetch(`${this.URL}/update`, {
+    const response = await fetch(`${this.URL}/update`, {
       method: 'POST',
       body: JSON.stringify({
         id,
@@ -61,6 +67,8 @@ class TasksAPIModel {
         'Content-type': 'application/json',
       },
     })
+    if (!response.ok)
+      throw new Error(`Error status: ${response.status}`)
   }
 }
 

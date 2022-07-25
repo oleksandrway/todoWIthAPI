@@ -31,15 +31,3 @@ const view2 = new TasksView({
 })
 const model2 = new TasksAPIModel({ URL: ' http://localhost:8080' })
 const tasksController2 = new TasksController({ tasksView: view2, tasksModel: model2 })
-
-const logAPI = async (url) => {
-  const response = await fetch(url)
-    .then(res => res.json())
-    .then(res => console.log(res.data))
-  // if (!response.ok)
-  //   console.log('status', response.status)
-
-  // console.log('hi', await response.json())
-}
-
-logAPI('http://localhost:8080/list')
