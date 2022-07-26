@@ -16,12 +16,18 @@
 
   &--type-delete {
     width: 44px;
-    padding: 3px 8px;
+    padding: 5px 8px;
     background-color: rgb(255, 47, 47);
 
     &:hover {
       background-color: rgb(255, 102, 102);
     }
+
+    img {
+      width:24px;
+      height:22px;
+      object-fit: cover;
+     }
   }
 
   &--type-edit {
@@ -31,5 +37,11 @@
     &:hover {
       background-color: rgb(167, 167, 167);
     }
+
+    img {
+      width:28px;
+      height:28px;
+      object-fit: cover;
+     }
   }
 }
