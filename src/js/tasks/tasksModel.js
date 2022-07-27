@@ -1,4 +1,4 @@
-
+import { getRandomId } from '@/js/helpers/getRandomId'
 class TasksModel {
   constructor(keyInStorage) {
     this.store = localStorage
@@ -18,13 +18,20 @@ class TasksModel {
     this.store.setItem(this.keyInStorage, JSON.stringify(newList))
   }
 
-  addTask({ name, id }) {
+  createTask({ name }) {
+    const id = getRandomId()
+    const newTask = {
+      id,
+      name,
+      completed: false,
+    }
     const oldList = this.getTasks()
-    const newLIst = [...oldList, { id, name, completed: false }]
+    const newLIst = [...oldList, newTask]
     this.store.setItem(this.keyInStorage, JSON.stringify(newLIst))
+    return newTask
   }
 
-  changeTaskState(id) {
+  changeTaskState({ id }) {
     const oldList = this.getTasks()
     const newList = oldList.map((item) => {
       if (item.id === id)
@@ -34,12 +41,7 @@ class TasksModel {
     this.store.setItem(this.keyInStorage, JSON.stringify(newList))
   }
 
-  getTask(id) {
-    const tasksList = this.getTasks()
-    return tasksList.find(item => item.id === id)
-  }
-
-  updateTask({ id, newValue }) {
+  editTask({ id, newValue }) {
     const oldList = this.getTasks()
     const newList = oldList.map((item) => {
       if (item.id === id)

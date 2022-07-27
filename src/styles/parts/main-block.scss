@@ -165,6 +165,8 @@
     }
   }
 
+
+
   .task-item {
         
     &__name {
@@ -176,7 +178,6 @@
     &__editing-form  {
       display: inline-block;
       max-width: calc(100% - 150px);
-      // max-width: 10%;
       overflow: hidden;
       input {
         width: 100%;

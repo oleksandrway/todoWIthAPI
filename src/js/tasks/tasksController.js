@@ -4,43 +4,99 @@ class TasksController {
     this.tasksModel = tasksModel
     this.tasksView = tasksView
 
-    this.storedTasks = this.tasksModel.getTasks()
-
-    this.storedTasks.forEach(task => this.tasksView.renderTask(task))
+    this.renderStoredTasks()
 
     this.tasksView.hooks.on('task-add', ({ name, id }) => {
-      this.addTask({ name, id })
+      this.createTask({ name, id })
     })
     this.tasksView.hooks.on('task-remove', (id) => {
       this.removeTask(id)
     })
 
-    this.tasksView.hooks.on('task-state-change', (id) => {
-      this.changeTaskState(id)
+    this.tasksView.hooks.on('task-state-change', ({ id, completed }) => {
+      this.changeTaskState({ id, completed })
     })
     this.tasksView.hooks.on('task-update', ({ id, newValue }) => {
       this.editTask({ id, newValue })
     })
   }
 
-  addTask({ name, id }) {
-    this.tasksModel.addTask({ name, id })
-    this.tasksView.renderTask(this.tasksModel.getTask(id))
+  handleError(error) {
+    console.log(error)
+    alert(error.message)
   }
 
-  removeTask(id) {
-    this.tasksModel.removeTask(id)
-    this.tasksView.removeTask(id)
+  async renderStoredTasks() {
+    this.tasksView.showTasksLoader()
+
+    try {
+      const tasksList = await this.tasksModel.getTasks()
+      if (tasksList)
+        tasksList.forEach(task => this.tasksView.renderTask(task))
+    }
+    catch (error) {
+      this.handleError(error)
+    }
+    finally {
+      this.tasksView.hideTasksLoader()
+    }
   }
 
-  changeTaskState(id) {
-    this.tasksModel.changeTaskState(id)
-    this.tasksView.changeTaskState(this.tasksModel.getTask(id))
+  async createTask({ name }) {
+    this.tasksView.showTaskLoader()
+
+    try {
+      const task = await this.tasksModel.createTask({ name })
+      this.tasksView.renderTask(task)
+    }
+    catch (error) {
+      this.handleError(error)
+    }
+    finally {
+      this.tasksView.hideTaskLoader()
+    }
   }
 
-  editTask({ id, newValue }) {
-    this.tasksModel.updateTask({ id, newValue })
-    this.tasksView.editTask({ newValue, id })
+  async removeTask(id) {
+    this.tasksView.showInnerTaskLoader(id)
+
+    try {
+      await this.tasksModel.removeTask(id)
+      this.tasksView.removeTask(id)
+    }
+    catch (error) {
+      this.handleError(error)
+      this.tasksView.hideInnerTaskLoader(id)
+    }
+  }
+
+  async changeTaskState({ id, completed }) {
+    this.tasksView.showInnerTaskLoader(id)
+    try {
+      await this.tasksModel.changeTaskState({ id, completed })
+      this.tasksView.changeTaskState({ id, completed })
+    }
+    catch (error) {
+      this.handleError(error)
+    }
+    finally {
+      this.tasksView.hideInnerTaskLoader(id)
+    }
+  }
+
+  async editTask({ id, newValue }) {
+    this.tasksView.showInnerTaskLoader(id)
+
+    try {
+      await this.tasksModel.editTask({ id, newValue })
+      this.tasksView.editTask({ newValue, id })
+    }
+    catch (error) {
+      this.handleError(error)
+    }
+    finally {
+      this.tasksView.hideInnerTaskLoader(id)
+    }
   }
 }
 

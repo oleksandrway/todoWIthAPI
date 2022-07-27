@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&family=Fascinate&display=swap');
-@import 'bootstrap/dist/css/bootstrap-reboot.css';
+@import url("https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;700&family=Fascinate&display=swap");
+@import "bootstrap/dist/css/bootstrap-reboot.css";
 
-@import './variables';
-@import './reuse-parts';
+@import "./variables";
+@import "./reuse-parts";
 
 body {
-  font-family: 'Anek Latin', sans-serif;
+  font-family: "Anek Latin", sans-serif;
   background-color: $dark-main-color;
   color: #fff;
 }
@@ -27,12 +27,11 @@ ul {
 }
 
 input {
-  background: #17181F;
-  border: 5px solid #20212C;
+  background: $dark-main-color;
+  border: 5px solid #20212c;
   outline: none;
   color: rgba(255, 255, 255, 0.47);
 }
 
-
-@import './parts/header';
-@import './parts/main-block'
+@import "./parts/header";
+@import "./parts/main-block";
