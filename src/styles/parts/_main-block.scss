@@ -15,6 +15,7 @@
     line-height: 36px;
     color: rgba(255, 255, 255, 0.47);
     margin-bottom: 15px;
+    text-align: center;
   }
 
   &__btn {
@@ -47,6 +48,7 @@
   padding-top: 30px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+
   column-gap: 100px;
 
   &__completed {
@@ -62,12 +64,13 @@
   padding: 10px 20px;
   border-radius: $border-radius;
   background-color: #20212c;
-
   &__name {
     font-size: 20px;
     font-weight: 400;
     margin-right: 15px;
     line-height: 20px;
+   word-break: break-word;
+
     &--hidden {
       display: none;
     }
@@ -156,37 +159,30 @@
 
   .add-task-form {
     &__btn {
-      margin-left: 0;
+           margin-left: 0;
       margin-top: 10px;
       width: 50%;
     }
   }
 
   .task-item {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 10px;
-    margin: 0;
-    border-radius: 0;
-    border-bottom: 1px solid #00000041;
-
+        
     &__name {
       font-size: 15px;
-      max-width: 83%;
-      margin-right: 0;
-      line-height: 17px;
+            line-height: 17px;
+      overflow: hidden;
+    }
+
+    &__editing-form  {
+      display: inline-block;
+      max-width: calc(100% - 150px);
+      // max-width: 10%;
+      overflow: hidden;
+      input {
+        width: 100%;
+      }
+
     }
   }
 
-  .tasks-list {
-    flex-wrap: wrap;
-    width: 100%;
-  }
-
-  .task-item-controls {
-    width: 100%;
-    justify-content: space-around;
-    padding: 10px;
-  }
 }
